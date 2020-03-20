@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Coaching.Data;
 using Coaching.Interfaces;
 using Coaching.Models;
+using Microsoft.VisualBasic;
 
 namespace Coaching.Services
 {
@@ -17,15 +18,20 @@ namespace Coaching.Services
             _context = context;
         }
 
+
         public List<TaskModel> GetTasks()
         {
             return _context.Tasks.ToList();
         }
-
-        public TaskModel GetTask(int TaskId)
+        public async Task<TaskModel> GetTask(int taskId)
         {
-            return _context.Tasks.Find(TaskId);
+            var found = await _context.Tasks.FindAsync(taskId);
+            return found;
         }
+        //public TaskModel GetTask(int TaskId)
+        //{
+        //    return _context.Tasks.Find(TaskId);
+        //}
 
         public void AddTask(TaskModel task)
         {
