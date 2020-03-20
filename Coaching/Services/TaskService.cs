@@ -10,21 +10,39 @@ namespace Coaching.Services
 {
     public class TaskService : ITaskService
     {
+        private ApplicationDbContext _context;
+
+        public TaskService(ApplicationDbContext context)
+        {
+            _context = context;
+        }
 
         public List<TaskModel> GetTasks()
         {
-            using (ApplicationDbContext context = new ApplicationDbContext())
-            {
-                return context.Tasks.ToList();
-            }
+            return _context.Tasks.ToList();
         }
 
         public TaskModel GetTask(int TaskId)
         {
-            using (ApplicationDbContext context = new ApplicationDbContext())
-            {
-                return context.Tasks.Find(TaskId);
-            }
+            return _context.Tasks.Find(TaskId);
+        }
+
+        public void AddTask(TaskModel task)
+        {
+            _context.Tasks.Add(task);
+            _context.SaveChanges();
+        }
+
+        public void EditTask(TaskModel task)
+        {
+            _context.Tasks.Update(task);
+            _context.SaveChanges();
+        }
+
+        public void DeleteTask(TaskModel task)
+        {
+            _context.Tasks.Remove(task);
+            _context.SaveChanges();
         }
     }
 
