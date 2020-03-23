@@ -5,50 +5,49 @@ using System.Threading.Tasks;
 using Coaching.Data;
 using Coaching.Interfaces;
 using Coaching.Models;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualBasic;
 
 namespace Coaching.Services
 {
     public class TaskService : ITaskService
     {
-        private ApplicationDbContext _context;
+        private readonly ApplicationDbContext _context;
 
         public TaskService(ApplicationDbContext context)
         {
             _context = context;
         }
 
-
-        public List<TaskModel> GetTasks()
+        public async Task<List<TaskModel>> GetTasks()
         {
-            return _context.Tasks.ToList();
+            return await _context.Tasks.ToListAsync();
         }
         public async Task<TaskModel> GetTask(int taskId)
         {
-            var found = await _context.Tasks.FindAsync(taskId);
-            return found;
+            return await _context.Tasks.FindAsync(taskId);
         }
-        //public TaskModel GetTask(int TaskId)
-        //{
-        //    return _context.Tasks.Find(TaskId);
-        //}
 
-        public void AddTask(TaskModel task)
+        public async Task<TaskModel> AddTask(TaskModel task)
         {
             _context.Tasks.Add(task);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
+            return task;
         }
 
-        public void EditTask(TaskModel task)
+        public async Task<TaskModel> EditTask(TaskModel task)
         {
             _context.Tasks.Update(task);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
+            return task;
         }
 
-        public void DeleteTask(TaskModel task)
+        public async Task<TaskModel> DeleteTask(int taskId)
         {
+            var task = await _context.Tasks.FindAsync(taskId);
             _context.Tasks.Remove(task);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
+            return task;
         }
     }
 

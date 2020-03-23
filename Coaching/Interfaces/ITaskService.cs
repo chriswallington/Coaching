@@ -8,7 +8,11 @@ namespace Coaching.Interfaces
 {
     public interface ITaskService
     {
-        List<TaskModel> GetTasks();
-        TaskModel GetTask(int TaskId);
+        Task<TaskModel> GetTask(int taskId);
+        Task<List<TaskModel>> GetTasks();
+
+        Task<TaskModel> AddTask(TaskModel task);
+        Task<TaskModel> EditTask(TaskModel task);
+        Task<TaskModel> DeleteTask(int TaskId);
     }
 }
