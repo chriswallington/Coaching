@@ -9,10 +9,12 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.EntityFrameworkCore;
 using Coaching.Data;
+using Coaching.Interfaces;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Coaching.Models;
+using Coaching.Services;
 
 namespace Coaching
 {
@@ -40,6 +42,7 @@ namespace Coaching
                     options.LoginPath = "/Home/Login";
                 }
             );
+            services.AddTransient<ITaskService, TaskService>();
 
         }
 
