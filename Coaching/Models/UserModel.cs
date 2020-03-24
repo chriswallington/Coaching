@@ -10,5 +10,7 @@ namespace Coaching.Models
     {
         public string Firstname { get; set; }
         public string Surname { get; set; }
+        public List<TaskModel> Tasks { get; set; }
+
     }
 }
