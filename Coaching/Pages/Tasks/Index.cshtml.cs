@@ -6,24 +6,25 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using Coaching.Data;
+using Coaching.Interfaces;
 using Coaching.Models;
 
 namespace Coaching.Pages.Tasks
 {
     public class IndexModel : PageModel
     {
-        private readonly Coaching.Data.ApplicationDbContext _context;
+        private readonly ITaskService _taskService;
 
-        public IndexModel(Coaching.Data.ApplicationDbContext context)
+        public IndexModel(ITaskService taskService)
         {
-            _context = context;
+            _taskService = taskService;
         }
 
         public IList<TaskModel> TaskModel { get;set; }
 
         public async Task OnGetAsync()
         {
-            TaskModel = await _context.Tasks.ToListAsync();
+            TaskModel = await _taskService.GetTasks();
         }
     }
 }

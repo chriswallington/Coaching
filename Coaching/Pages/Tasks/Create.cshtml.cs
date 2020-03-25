@@ -6,17 +6,19 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Coaching.Data;
+using Coaching.Interfaces;
 using Coaching.Models;
+using Coaching.Services;
 
 namespace Coaching.Pages.Tasks
 {
     public class CreateModel : PageModel
     {
-        private readonly Coaching.Data.ApplicationDbContext _context;
+        private readonly ITaskService _taskService;
 
-        public CreateModel(Coaching.Data.ApplicationDbContext context)
+        public CreateModel(ITaskService taskService)
         {
-            _context = context;
+            _taskService = taskService;
         }
 
         public IActionResult OnGet()
@@ -27,8 +29,6 @@ namespace Coaching.Pages.Tasks
         [BindProperty]
         public TaskModel TaskModel { get; set; }
 
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for
-        // more details see https://aka.ms/RazorPagesCRUD.
         public async Task<IActionResult> OnPostAsync()
         {
             if (!ModelState.IsValid)
@@ -36,8 +36,7 @@ namespace Coaching.Pages.Tasks
                 return Page();
             }
 
-            _context.Tasks.Add(TaskModel);
-            await _context.SaveChangesAsync();
+            await _taskService.AddTask(TaskModel);
 
             return RedirectToPage("./Index");
         }
