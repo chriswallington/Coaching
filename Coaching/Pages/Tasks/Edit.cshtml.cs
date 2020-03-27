@@ -7,17 +7,18 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Coaching.Data;
+using Coaching.Interfaces;
 using Coaching.Models;
 
 namespace Coaching.Pages.Tasks
 {
     public class EditModel : PageModel
     {
-        private readonly Coaching.Data.ApplicationDbContext _context;
+        private readonly ITaskService _taskService;
 
-        public EditModel(Coaching.Data.ApplicationDbContext context)
+        public EditModel(ITaskService taskService)
         {
-            _context = context;
+            _taskService = taskService;
         }
 
         [BindProperty]
@@ -30,7 +31,7 @@ namespace Coaching.Pages.Tasks
                 return NotFound();
             }
 
-            TaskModel = await _context.Tasks.FirstOrDefaultAsync(m => m.TaskId == id);
+            TaskModel = await _taskService.GetTask(id);
 
             if (TaskModel == null)
             {
@@ -39,39 +40,47 @@ namespace Coaching.Pages.Tasks
             return Page();
         }
 
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for
-        // more details see https://aka.ms/RazorPagesCRUD.
-        public async Task<IActionResult> OnPostAsync()
+        public async Task<IActionResult> OnPostAsync(int? id)
         {
-            if (!ModelState.IsValid)
+            var taskToEdit = await _taskService.GetTask(id);
+
+            if (taskToEdit == null)
             {
-                return Page();
+                return NotFound();
             }
 
-            _context.Attach(TaskModel).State = EntityState.Modified;
+            await _taskService.EditTask(taskToEdit);
 
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!TaskModelExists(TaskModel.TaskId))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+            //if (!ModelState.IsValid)
+            //{
+            //    return Page();
+            //}
+
+            //_context.Attach(TaskModel).State = EntityState.Modified;
+
+            //try
+            //{
+            //    await _context.SaveChangesAsync();
+            //}
+            //catch (DbUpdateConcurrencyException)
+            //{
+            //    if (!TaskModelExists(TaskModel.TaskId))
+            //    {
+            //        return NotFound();
+            //    }
+            //    else
+            //    {
+            //        throw;
+            //    }
+            //}
 
             return RedirectToPage("./Index");
         }
 
-        private bool TaskModelExists(int id)
-        {
-            return _context.Tasks.Any(e => e.TaskId == id);
-        }
+        //private bool TaskModelExists(int id)
+        //{
+        //    return _taskService.GetTask(id).IsCompletedSuccessfully;
+        //    //return _context.Tasks.Any(e => e.TaskId == id);
+        //}
     }
 }

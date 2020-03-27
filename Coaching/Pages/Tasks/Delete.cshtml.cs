@@ -6,17 +6,18 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using Coaching.Data;
+using Coaching.Interfaces;
 using Coaching.Models;
 
 namespace Coaching.Pages.Tasks
 {
     public class DeleteModel : PageModel
     {
-        private readonly Coaching.Data.ApplicationDbContext _context;
+        private readonly ITaskService _taskService;
 
-        public DeleteModel(Coaching.Data.ApplicationDbContext context)
+        public DeleteModel(ITaskService taskService)
         {
-            _context = context;
+            _taskService = taskService;
         }
 
         [BindProperty]
@@ -29,7 +30,7 @@ namespace Coaching.Pages.Tasks
                 return NotFound();
             }
 
-            TaskModel = await _context.Tasks.FirstOrDefaultAsync(m => m.TaskId == id);
+            TaskModel = await _taskService.GetTask(id);
 
             if (TaskModel == null)
             {
@@ -45,13 +46,7 @@ namespace Coaching.Pages.Tasks
                 return NotFound();
             }
 
-            TaskModel = await _context.Tasks.FindAsync(id);
-
-            if (TaskModel != null)
-            {
-                _context.Tasks.Remove(TaskModel);
-                await _context.SaveChangesAsync();
-            }
+            TaskModel = await _taskService.DeleteTask(id);
 
             return RedirectToPage("./Index");
         }

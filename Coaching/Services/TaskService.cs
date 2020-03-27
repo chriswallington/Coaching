@@ -23,7 +23,7 @@ namespace Coaching.Services
         {
             return await _context.Tasks.ToListAsync();
         }
-        public async Task<TaskModel> GetTask(int taskId)
+        public async Task<TaskModel> GetTask(int? taskId)
         {
             return await _context.Tasks.FindAsync(taskId);
         }
@@ -42,11 +42,16 @@ namespace Coaching.Services
             return task;
         }
 
-        public async Task<TaskModel> DeleteTask(int taskId)
+        public async Task<TaskModel> DeleteTask(int? taskId)
         {
             var task = await _context.Tasks.FindAsync(taskId);
-            _context.Tasks.Remove(task);
-            await _context.SaveChangesAsync();
+            
+            if (task != null)
+            {
+                _context.Tasks.Remove(task);
+                await _context.SaveChangesAsync();
+            }
+            
             return task;
         }
     }
