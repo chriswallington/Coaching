@@ -40,47 +40,17 @@ namespace Coaching.Pages.Tasks
             return Page();
         }
 
-        public async Task<IActionResult> OnPostAsync(int? id)
+        public async Task<IActionResult> OnPostAsync()
         {
-            var taskToEdit = await _taskService.GetTask(id);
-
-            if (taskToEdit == null)
+            if (!ModelState.IsValid)
             {
-                return NotFound();
+                return Page();
             }
 
-            await _taskService.EditTask(taskToEdit);
-
-            //if (!ModelState.IsValid)
-            //{
-            //    return Page();
-            //}
-
-            //_context.Attach(TaskModel).State = EntityState.Modified;
-
-            //try
-            //{
-            //    await _context.SaveChangesAsync();
-            //}
-            //catch (DbUpdateConcurrencyException)
-            //{
-            //    if (!TaskModelExists(TaskModel.TaskId))
-            //    {
-            //        return NotFound();
-            //    }
-            //    else
-            //    {
-            //        throw;
-            //    }
-            //}
+            await _taskService.EditTask(TaskModel);
 
             return RedirectToPage("./Index");
         }
 
-        //private bool TaskModelExists(int id)
-        //{
-        //    return _taskService.GetTask(id).IsCompletedSuccessfully;
-        //    //return _context.Tasks.Any(e => e.TaskId == id);
-        //}
     }
 }
