@@ -23,7 +23,11 @@ namespace Coaching.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<RelationModel>().HasKey(x => new {x.UserId, x.CoachId});
+            base.OnModelCreating(modelBuilder);
+            modelBuilder.Entity<RelationModel>(b =>
+            {
+                b.HasKey(x => new { x.UserId, x.CoachId });
+            });
         }
     }
 }

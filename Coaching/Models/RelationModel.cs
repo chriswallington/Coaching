@@ -1,17 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.SignalR;
+using Microsoft.EntityFrameworkCore;
 
 namespace Coaching.Models
 {
     public class RelationModel
     {
-        public int UserId;
-        public UserModel ApplicationUser;
-        public int CoachId;
-        public UserModel CoachUser;
+        public int UserId { get; set; }
+        public UserModel ApplicationUser { get; set; }
+        public int CoachId { get; set; }
+        public UserModel CoachUser { get; set; }
+
     }
+
 }
