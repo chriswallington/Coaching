@@ -19,5 +19,11 @@ namespace Coaching.Data
         }
 
         public DbSet<TaskModel> Tasks { get; set; }
+        public DbSet<RelationModel> Relations { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<RelationModel>().HasKey(x => new {x.UserId, x.CoachId});
+        }
     }
 }

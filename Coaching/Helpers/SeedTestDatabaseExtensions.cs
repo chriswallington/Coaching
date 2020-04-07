@@ -57,6 +57,27 @@ namespace Coaching.Helpers
                     await userManager.UpdateAsync(user);
                 }
             }
+
+            if (!userManager.Users.Any(x => x.UserName == "mark"))
+            {
+                var user = new UserModel
+                {
+                    Email = "mark@vet.co.uk",
+                    UserName = "mark",
+                    EmailConfirmed = true,
+                    Firstname = "Mark",
+                    Surname = "Madeup"
+                };
+
+                var result = await userManager.CreateAsync(user, "F4k3!V3t");
+
+                if (result == IdentityResult.Success)
+                {
+                    // Put the user in the admin role
+                    await userManager.AddToRoleAsync(user, "User");
+                    await userManager.UpdateAsync(user);
+                }
+            }
         }
 
     }
